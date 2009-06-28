@@ -77,19 +77,24 @@ def estado(posicion, cuantos):
     return (clasifica, repechaje, eliminado)
 
 
+def puede_ser_eliminado(equipo, puntos):
+    '''Verifica si una asignacion completa de resultados satisface el criterio
+    de busqueda.  Retorna True si el criterio se cumple, False si no.'''
+    for (pos, c, eq, _) in tabla_de_posiciones(puntos):
+        if eq == equipo:
+            (_, _, el) = estado(pos, c)
+            return el
+    else:
+        print "Error: no encontramos a Chile"
+        exit()
+
+
 def backtrack(resultados, puntos, i=0):
     if i == len(resultados):
-        for (pos, c, eq, _) in tabla_de_posiciones(puntos):
-            if eq == 'Chile':
-                (_, _, el) = estado(pos, c)
-                if el:
-                    print "Chile puede quedar eliminado"
-                    print resultados.tostring()
-                    print list(tabla_de_posiciones(puntos))
-                    exit()
-                return
-        else:
-            print "Error: no encontramos a Chile"
+        if puede_ser_eliminado('Chile', puntos):
+            print "Chile puede quedar eliminado"
+            print resultados.tostring()
+            print list(tabla_de_posiciones(puntos))
             exit()
     else:
         #if i % partidos_por_fecha == 0:
