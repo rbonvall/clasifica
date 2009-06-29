@@ -87,9 +87,9 @@ def crear_dominios(partidos, puntaje):
         elif visita == 'Chile':
             resultados_por_asignar = 'L'
         elif posiciones[local] < posiciones[visita]:
-            resultados_por_asignar = 'LEV'
+            resultados_por_asignar = 'LVE'
         else:
-            resultados_por_asignar = 'VEL'
+            resultados_por_asignar = 'VLE'
         dominios.append((partido, resultados_por_asignar))
     return dominios
 
