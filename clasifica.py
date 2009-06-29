@@ -44,7 +44,7 @@ partidos = [
     ('Chile',     'Ecuador'),
 ]
 
-res_ptsL_ptsV = [('L', 3, 0), ('V', 0, 3), ('E', 1, 1),]
+puntos_equipos = {'L': (3, 0), 'E': (1, 1), 'V': (0, 3)}
 equipos = list(puntaje_inicial.keys())
 partidos_por_fecha = len(equipos) // 2
 
@@ -89,7 +89,7 @@ def puede_ser_eliminado(equipo, puntos):
         exit()
 
 
-def backtrack(resultados, puntos, i=0):
+def backtrack(dominio_partidos, resultados, puntos, i=0):
     if i == len(resultados):
         if puede_ser_eliminado('Chile', puntos):
             print "Chile puede quedar eliminado"
@@ -101,12 +101,13 @@ def backtrack(resultados, puntos, i=0):
         #    # ya terminamos de asignar una fecha completa,
         #    # y podemos revisar si el quinto puede alcanzar a Chile.
         #    fechas_restantes = (len(partidos) - i) // partidos_por_fecha
-        equipo_local, equipo_visita = partidos[i]
-        for resultado, puntos_local, puntos_visita in res_ptsL_ptsV:
+        (equipo_local, equipo_visita), dominio = dominio_partidos[i]
+        for resultado in dominio:
+            puntos_local, puntos_visita = puntos_equipos[resultado]
             resultados[i] = resultado
             puntos[equipo_local] += puntos_local
             puntos[equipo_visita] += puntos_visita
-            backtrack(resultados, puntos, i + 1)
+            backtrack(dominio_partidos, resultados, puntos, i + 1)
             puntos[equipo_local] -= puntos_local
             puntos[equipo_visita] -= puntos_visita
 
@@ -114,7 +115,8 @@ def backtrack(resultados, puntos, i=0):
 def main():
     resultados = array('c', ' ' * len(partidos))
     puntaje = puntaje_inicial.copy()
-    backtrack(resultados, puntaje)
+    dominio_partidos = [(p, 'LEV') for p in partidos]
+    backtrack(dominio_partidos, resultados, puntaje)
 
 if __name__ == '__main__':
     try:
