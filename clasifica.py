@@ -80,7 +80,9 @@ def crear_dominios(partidos, puntaje):
     dominios = []
     for partido in partidos:
         local, visita = partido
-        if local == 'Chile':
+        if partido == ('Chile', 'Venezuela'):
+            resultados_por_asignar = 'L'
+        elif local == 'Chile':
             resultados_por_asignar = 'V'
         elif visita == 'Chile':
             resultados_por_asignar = 'L'
