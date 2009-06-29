@@ -66,11 +66,6 @@ def tabla_de_posiciones(puntos):
 
 
 def crear_dominios(partidos, puntaje):
-    # estrategia mas sencilla: probar todos los resultados en orden
-    return [(p, 'LEV') for p in partidos]
-
-    # estrategia mas astuta
-     
     posiciones = dict((eq, pos) for (pos, _, eq, _) in tabla_de_posiciones(puntaje))
 
     # los partidos seran asignados en este orden:
