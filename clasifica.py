@@ -116,14 +116,18 @@ def puede_ser_eliminado(equipo, puntos):
         exit()
 
 
+def analizar_resultados(dominio_partidos, resultados, puntos):
+    if puede_ser_eliminado('Chile', puntos):
+        print "Chile puede quedar eliminado"
+        print resultados.tostring()
+        print list(tabla_de_posiciones(puntos))
+        exit()
+
+
 def backtrack(dominio_partidos, resultados, puntos, i=0):
     if i == len(resultados):
         print resultados.tostring()
-        if puede_ser_eliminado('Chile', puntos):
-            print "Chile puede quedar eliminado"
-            print resultados.tostring()
-            print list(tabla_de_posiciones(puntos))
-            exit()
+        analizar_resultados(dominio_partidos, resultados, puntos)
     else:
         #if i % partidos_por_fecha == 0:
         #    # ya terminamos de asignar una fecha completa,
