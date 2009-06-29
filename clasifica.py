@@ -104,21 +104,26 @@ def estado(posicion, cuantos):
     return (clasifica, repechaje, eliminado)
 
 
-def puede_ser_eliminado(equipo, puntos):
-    '''Verifica si una asignacion completa de resultados satisface el criterio
-    de busqueda.  Retorna True si el criterio se cumple, False si no.'''
-
+def analizar_resultados(dominio_partidos, resultados, puntos, casos=set()):
+    equipo = 'Chile'
     pos, c = ((pos, c) for (pos, c, eq, _) in tabla_de_posiciones(puntos) if eq == equipo).next()
-    (_, _, el) = estado(pos, c)
-    return el
+    (clasifica, repechaje, eliminado) = estado(pos, c)
 
-
-def analizar_resultados(dominio_partidos, resultados, puntos):
-    if puede_ser_eliminado('Chile', puntos):
-        print "Chile puede quedar eliminado"
-        print resultados.tostring()
-        print list(tabla_de_posiciones(puntos))
-        exit()
+    caso = {
+        (True,  True,  True):  'Eliminado por diferencia de goles',
+        (False, True,  True):  'Eliminado por diferencia de goles',
+        (True,  True,  False): 'Repechaje por diferencia de goles',
+        (True,  False, False): 'Clasificado',
+        (False, True,  False): 'Repechaje',
+        (False, False, True):  'Eliminado',
+    }[clasifica, repechaje, eliminado]
+    if caso not in casos:
+        print 'Caso:', caso
+        print 'Resultados:', resultados.tostring()
+        print 'Tabla:', list(tabla_de_posiciones(puntos))
+        casos.add(caso)
+        if len(casos) == 5:
+            exit()
 
 
 def backtrack(dominio_partidos, resultados, puntos, i=0):
