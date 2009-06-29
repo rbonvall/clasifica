@@ -107,13 +107,10 @@ def estado(posicion, cuantos):
 def puede_ser_eliminado(equipo, puntos):
     '''Verifica si una asignacion completa de resultados satisface el criterio
     de busqueda.  Retorna True si el criterio se cumple, False si no.'''
-    for (pos, c, eq, _) in tabla_de_posiciones(puntos):
-        if eq == equipo:
-            (_, _, el) = estado(pos, c)
-            return el
-    else:
-        print "Error: no encontramos a Chile"
-        exit()
+
+    pos, c = ((pos, c) for (pos, c, eq, _) in tabla_de_posiciones(puntos) if eq == equipo).next()
+    (_, _, el) = estado(pos, c)
+    return el
 
 
 def analizar_resultados(dominio_partidos, resultados, puntos):
