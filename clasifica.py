@@ -65,6 +65,38 @@ def tabla_de_posiciones(puntos):
         posicion += cuantos
 
 
+def crear_dominios(partidos, puntaje):
+    # estrategia mas sencilla: probar todos los resultados en orden
+    return [(p, 'LEV') for p in partidos]
+
+    # estrategia mas astuta
+     
+    posiciones = dict((eq, pos) for (pos, _, eq, _) in tabla_de_posiciones(puntaje))
+
+    # los partidos seran asignados en este orden:
+    # * primero los partidos de Chile,
+    # * luego en orden de relevancia ascendente, donde la relevancia es el
+    #   negativo de la suma de las posiciones de los equipos
+    def relevancia(partido):
+        local, visita = partido
+        return ('Chile' in partido, posiciones[local] + posiciones[visita])
+    partidos = sorted(partidos, reverse=True, key=relevancia)
+
+    dominios = []
+    for partido in partidos:
+        local, visita = partido
+        if local == 'Chile':
+            resultados_por_asignar = 'V'
+        elif visita == 'Chile':
+            resultados_por_asignar = 'L'
+        elif posiciones[local] < posiciones[visita]:
+            resultados_por_asignar = 'LEV'
+        else:
+            resultados_por_asignar = 'VEL'
+        dominios.append((partido, resultados_por_asignar))
+    return dominios
+
+
 def estado(posicion, cuantos):
     '''Dada la posicion de un equipo y cuantos equipos comparten su posicion,
     retorna una tupla (clasifica, repechaje, eliminado), donde cada elemento
@@ -91,6 +123,7 @@ def puede_ser_eliminado(equipo, puntos):
 
 def backtrack(dominio_partidos, resultados, puntos, i=0):
     if i == len(resultados):
+        print resultados.tostring()
         if puede_ser_eliminado('Chile', puntos):
             print "Chile puede quedar eliminado"
             print resultados.tostring()
@@ -115,8 +148,8 @@ def backtrack(dominio_partidos, resultados, puntos, i=0):
 def main():
     resultados = array('c', ' ' * len(partidos))
     puntaje = puntaje_inicial.copy()
-    dominio_partidos = [(p, 'LEV') for p in partidos]
-    backtrack(dominio_partidos, resultados, puntaje)
+    dominio = crear_dominios(partidos, puntaje)
+    backtrack(dominio, resultados, puntaje)
 
 if __name__ == '__main__':
     try:
